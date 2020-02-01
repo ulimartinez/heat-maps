@@ -1,2 +1,14 @@
- .btn-primary{  background-color: #8064A2;
+ .btn-primary{  background-color: rgb(52, 150, 104);
+    border: none;
 }
+.btn-primary:active {
+    background-color: rgb(30, 92, 63);
+}
+.btn-primary:hover{  background-color: rgb(30, 92, 63);
+}
+
+.h1{
+    text-align: center;
+}
+
+
