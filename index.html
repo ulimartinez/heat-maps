@@ -1,14 +1,34 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>
             Safe Zones
 	</title>
  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<meta charset="utf-8" />
     </head>
     <body>
 	    <div class="container">
-		    <div id="map">Hi I'm a map</div>
+		    <div id="map"></div>
 	    </div>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=[YOUR_BING_MAPS_KEY]' async defer></script>
+	<script>
+		function GetMap(){
+			var map = new Microsoft.Maps.Map('#map', {
+				center: new Microsoft.Maps.Location(31.7593968,-106.4894896)
+
+				});
+			// community foundation coordinates: 31.7593968,-106.4894896
+			var center = map.getCenter();
+			var pin = new Microsoft.Maps.Pushpin(center, {
+			    title: 'Microsoft',
+			    subTitle: 'City Center',
+			    text: '1'
+			});		//do the map stuff here
+			map.entities.push(pin);
+	    	}
+		GetMap();
+	</script>
     </body>
     </html>
