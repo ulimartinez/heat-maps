@@ -1,0 +1,49 @@
+
+@import url('https://fonts.googleapis.com/css?family=Jura:300');
+
+ .btn-primary{  background-color: #8064A2;
+}
+
+
+#spinner {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: -280px;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.45);
+  top: -80px;
+  transform: scale(0.35);
+  transform-origin: 0% 100%;
+}
+
+#spinner svg {
+    width: 150px;
+    -webkit-animation: spin 2s linear infinite;
+    -moz-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  }
+#map {
+	position: relative;
+	width: 100%;
+	height: 900px;
+}
+
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotate(-360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(-360deg);
+  }
+}
+
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(-360deg);
+    transform: rotate(-360deg);
+  }
+}
