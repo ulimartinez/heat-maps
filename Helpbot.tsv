@@ -1,0 +1,15 @@
+Question	Answer
+Hi	Hello, what seems to be the problem?
+help	do you need a safe zone?
+yes	Searching for safe zones nearby
+I am in danger	Searching for the closest safe zone
+I feel unsafe	Looking for nearby safe zones
+Somebody is following me	Requesting safe zones nearby
+I need a safe zone	Searching...
+Are there any safe spaces nearby?	Looking for available spaces
+Am I in a dangerous place?	Redirecting you to EPSafe maps...
+What is the nearest safe space?	Searching for nearby safe spots...
+How many people fit?	How big is your party?
+3	Looking for safe spots with 3 capacity
+4	Looking for safe spots with 4 capacity
+5	Looking for safe spots with 5 capacity
