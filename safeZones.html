@@ -19,22 +19,27 @@
 			    <div class="modal-header" >
 				<form align-content="center">
 				    <div class="form-group" >
-				    <h1 class="text-center text-success">Safe Zone Request Form</h1>
-				    <label for="requestReason">Why do you need safe space? </label>
-				    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="someone's following me">
-				    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    <h1  class="text-center text-success">someone needs a safe zone</h1>
+                    <h2 >about this person:</h2>
+                    <label for="requestReason">Why they need a safe zone:</label>
+				    <small id="reason" class="form-text text-muted">I'm being followed </small>
 				    </div>
 				    <div class="form-group">
-				    <label for="exampleInputPassword1">Any special Accomodations?</label>
-				    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="">
-				    </div>
+                    <label for="acomodations?">Special accomodations:</label>
+                    <small id="accomodation" class="form-text text-muted">none </small>
+                    </div>
+                    <div class="form-group">
+                    <label for="distance">Diastance from safe zone:</label>
+                    <small id="milesS" class="form-text text-muted">4 miles </small>
+                    </div>
 				</form>
 			    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			    </button>
 			    </div>
 			    <div class="modal-footer">
-			    <button type="button" class="btn btn-success"  data-dismiss="modal">Request</button>
+                 <button id="decline" type="button" class="btn btn-danger"  data-dismiss="modal">Decline</button>
+                <button id="accept" type="button" class="btn btn-success"  data-dismiss="modal">Accept</button>
 			    </div>
 			</div>
 			</div>
