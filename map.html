@@ -77,6 +77,9 @@
                 <label>
                   <input type="checkbox" id="cb_crash" autocomplete="off"> Crashes
                 </label><br>
+                <label>
+                  <input type="checkbox" id="cb_zones" autocomplete="off"> Safe Zones*
+                </label><br>
 
                 <br>
 
@@ -117,10 +120,12 @@
 
 </body>
 <script src="resources/crashes.js"></script>
+<script src="resources/safeZones.js"></script>
 <script type='text/javascript'>
   let map;
   let layer_offenders;
-  let heatmap_crashes;
+  let layer_crashes;
+  let layer_zones;
 
   function GetMap() {
     map = new Microsoft.Maps.Map('#myMap', {
@@ -197,6 +202,21 @@
 
   };
 
+  const mapZones = () => {
+    let locs = [];
+
+    safeZones.forEach(zone => {
+      var pin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(zone.latitude, zone.longitude), {
+        title: 'Host: ' + zone.host,
+        subTitle: 'Capacity: ' + zone.capacity,
+        text: 'S'
+      });
+
+      map.entities.push(pin);
+    });
+
+  };
+
   $('#cb_sex').change(function () {
     if ($(this).is(":checked")) {
       $('#exampleModal').modal('show');
@@ -211,6 +231,14 @@
       mapCrashes();
     } else {
       map.layers.remove(layer_crashes);
+    }
+  });
+
+  $('#cb_zones').change(function () {
+    if ($(this).is(":checked")) {
+      mapZones();
+    } else {
+      map.layers.remove(layer_zones);
     }
   });
 
