@@ -20,13 +20,6 @@
 				<form align-content="center">
 				    <div class="form-group" >
 				    <h1 class="text-center">Safe Zone Request Form</h1>
-				    <label for="requestReason">Why do you need safe space? </label>
-				    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="someone's following me">
-				    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-				    </div>
-				    <div class="form-group">
-				    <label for="exampleInputPassword1">Any special Accomodations?</label>
-				    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="">
 				    </div>
 				</form>
 			    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -34,7 +27,7 @@
 			    </button>
 			    </div>
 			    <div class="modal-footer">
-			    <button type="button" class="btn btn-primary"  data-dismiss="modal">Request safe zone</button>
+				<iframe src='https://webchat.botframework.com/embed/epsosafe-know-bot?s=rngPCtBXvc0.7XLzTm5P5i62_6Lxr91H3tMuCFvydJwwLa-B8wTmvB8'  style='min-width: 400px; width: 100%; min-height: 500px;'></iframe>
 			    </div>
 			</div>
 			</div>
@@ -49,6 +42,7 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 	<script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=[YOUR_BING_MAPS_KEY]' async defer></script>
+	<script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 	<script>
 		let map;
 		function GetMap(){
@@ -60,13 +54,17 @@
 			// community foundation coordinates: 31.7593968,-106.4894896
 	    	}
 		function insertPins(map){
-			console.log(map);
-			//var center = map.getCenter();
+			var center = map.getCenter();
 			var pin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(31.7593968,-106.4894896), {
 			    title: 'Community',
 			    subTitle: 'Foundation',
 			    text: '1'
 			});		//do the map stuff here
+			var infobox = new Microsoft.Maps.Infobox(center, { title: 'Community Foundation', description: '<a href="#">Navigate</a>', visible: false });
+			infobox.setMap(map);
+			Microsoft.Maps.Events.addHandler(pin, 'click', function () {
+			    infobox.setOptions({ visible: true });
+			});
 			setTimeout(function(){
 				//add the pin
 				map.entities.push(pin);
@@ -75,6 +73,19 @@
 		$('document').ready(()=>{
         		$('#request').modal('show');
 			GetMap();
+			 window.WebChat.renderWebChat(
+			    {
+			       directLine: window.WebChat.createDirectLine({
+				  token: 'YOUR_DIRECT_LINE_TOKEN'
+			       }),
+			       userID: 'YOUR_USER_ID',
+			       username: 'Web Chat User',
+			       locale: 'en-US',
+			       botAvatarInitials: 'WC',
+			       userAvatarInitials: 'WW'
+			    },
+			    document.getElementById('webchat')
+			 );
 		});
 
 		$('#request').on('hide.bs.modal', function(e){
