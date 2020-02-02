@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>EP Safe</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- Reference to the Bing Maps SDK -->
+  <!-- TODO: move key to .env file -->
+  <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=[YOUR_BING_MAPS_KEY]'
+    async defer></script>
+  <!-- Fontawesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">EP Safe</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Map
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href=".">Safe Zone</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-9 text-center">
+        <div class="card mt-3">
+          <div class="card-body" id="myMap" style="position:relative;width:auto;height:400px;">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 text-left">
+        <div class="card mt-3">
+          <div class="card-header bg-dark text-white">
+            <i class="fas fa-sliders-h"></i> Filters
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="form-group">
+
+                <i class="fas fa-layer-group"></i>
+                <strong>Layers</strong>
+                <hr>
+
+                <label>
+                  <input type="checkbox" id="cb_sex" autocomplete="off"> Sex Offenders
+                </label><br>
+                <label>
+                  <input type="checkbox" id="cb_crash" autocomplete="off"> Crashes
+                </label><br>
+
+                <br>
+
+                <i class="fas fa-calendar-alt"></i>
+                <strong>Year</strong>
+                <input type="range" class="form-control-range" id="year" min="2010" max="2020" value="2020"
+                  oninput="updateYear();" autocomplete="off">
+                <span id="selectedYear">2020</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-body text-center">
+              <div class="fa-3x">
+                <i class="fas fa-asterisk fa-spin"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+</body>
+<script src="resources/crashes.js"></script>
+<script type='text/javascript'>
+  let map;
+  let layer_offenders;
+  let heatmap_crashes;
+
+  function GetMap() {
+    map = new Microsoft.Maps.Map('#myMap', {
+      credentials: 'Your Bing Maps Key',
+      center: new Microsoft.Maps.Location(31.8108262, -106.4047064),
+      // mapTypeId: Microsoft.Maps.MapTypeId.aerial,
+      zoom: 11,
+      showMapTypeSelector: false
+    });
+  }
+
+  const updateYear = () => {
+    let yearSelector = document.getElementById('year');
+    document.getElementById('selectedYear').textContent = yearSelector.value;
+  };
+
+  const mapOffenders = () => {
+    let bounds = map.getBounds().bounds;
+    $.post('php/offenders.php', {
+      swLng: bounds[3],
+      swLat: bounds[2],
+      neLng: bounds[1],
+      neLat: bounds[0]
+    }, function (data) {
+      let pins = JSON.parse(data);
+      let locs = [];
+
+      pins.forEach(pin => {
+        locs.push(new Microsoft.Maps.Location(pin.LAT_NBR, pin.LON_NBR));
+      });
+
+      Microsoft.Maps.loadModule('Microsoft.Maps.HeatMap', function () {
+        layer_offenders = new Microsoft.Maps.HeatMapLayer(locs, {
+          opacity: 0.5,
+          colorGradient: {
+            '0.0': 'rgb(0, 0, 0)',
+            '0.6': 'rgb(24, 53, 103)',
+            '0.75': 'rgb(46, 100, 158)',
+            '0.9': 'rgb(23, 173, 203)',
+            '1.0': 'rgb(0, 250, 250)'
+          },
+          drawOrder: 0
+        });
+        map.layers.insert(layer_offenders);
+      });
+      $('#exampleModal').modal('hide');
+    });
+
+  };
+
+  const mapCrashes = () => {
+    let locs = [];
+    let y = document.getElementById('year').value;
+
+    crashes.forEach(crash => {
+      if (crash.year == y) {
+        locs.push(new Microsoft.Maps.Location(crash.lat, crash.lng));
+      }
+    });
+
+    Microsoft.Maps.loadModule('Microsoft.Maps.HeatMap', function () {
+      layer_crashes = new Microsoft.Maps.HeatMapLayer(locs, {
+        opacity: 0.75,
+        colorGradient: {
+          '0': 'Black',
+          '0.33': 'DarkRed',
+          '0.66': 'Yellow',
+          '1': 'White'
+        },
+        drawOrder: 1
+      });
+      map.layers.insert(layer_crashes);
+    });
+
+  };
+
+  $('#cb_sex').change(function () {
+    if ($(this).is(":checked")) {
+      $('#exampleModal').modal('show');
+      mapOffenders();
+    } else {
+      map.layers.remove(layer_offenders);
+    }
+  });
+
+  $('#cb_crash').change(function () {
+    if ($(this).is(":checked")) {
+      mapCrashes();
+    } else {
+      map.layers.remove(layer_crashes);
+    }
+  });
+
+  $('#year').change(function () {
+    if ($('#cb_crash').is(":checked")) {
+      map.layers.remove(layer_crashes);
+      mapCrashes();
+    }
+  });
+
+</script>
+
+</html>

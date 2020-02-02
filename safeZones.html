@@ -19,15 +19,27 @@
 			    <div class="modal-header" >
 				<form align-content="center">
 				    <div class="form-group" >
-				    <h1 class="text-center">Safe Zone Request</h1>
+                    <h1  class="text-center text-success">someone needs a safe zone</h1>
+                    <h2 >about this person:</h2>
+                    <label for="requestReason">Why they need a safe zone:</label>
+				    <small id="reason" class="form-text text-muted">I'm being followed </small>
 				    </div>
+				    <div class="form-group">
+                    <label for="acomodations?">Special accomodations:</label>
+                    <small id="accomodation" class="form-text text-muted">none </small>
+                    </div>
+                    <div class="form-group">
+                    <label for="distance">Diastance from safe zone:</label>
+                    <small id="milesS" class="form-text text-muted">4 miles </small>
+                    </div>
 				</form>
 			    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			    </button>
 			    </div>
 			    <div class="modal-footer">
-				<iframe src='https://webchat.botframework.com/embed/epsosafe-know-bot?s=rngPCtBXvc0.7XLzTm5P5i62_6Lxr91H3tMuCFvydJwwLa-B8wTmvB8'  style='min-width: 400px; width: 100%; min-height: 500px;'></iframe>
+                 <button id="decline" type="button" class="btn btn-danger"  data-dismiss="modal">Decline</button>
+                <button id="accept" type="button" class="btn btn-success"  data-dismiss="modal">Accept</button>
 			    </div>
 			</div>
 			</div>
@@ -42,7 +54,6 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 	<script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=[YOUR_BING_MAPS_KEY]' async defer></script>
-	<script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 	<script>
 		let map;
 		function GetMap(){
@@ -54,17 +65,13 @@
 			// community foundation coordinates: 31.7593968,-106.4894896
 	    	}
 		function insertPins(map){
-			var center = map.getCenter();
+			console.log(map);
+			//var center = map.getCenter();
 			var pin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(31.7593968,-106.4894896), {
 			    title: 'Community',
 			    subTitle: 'Foundation',
 			    text: '1'
 			});		//do the map stuff here
-			var infobox = new Microsoft.Maps.Infobox(center, { title: 'Community Foundation', description: '<a href="#">Navigate</a>', visible: false });
-			infobox.setMap(map);
-			Microsoft.Maps.Events.addHandler(pin, 'click', function () {
-			    infobox.setOptions({ visible: true });
-			});
 			setTimeout(function(){
 				//add the pin
 				map.entities.push(pin);
@@ -73,19 +80,6 @@
 		$('document').ready(()=>{
         		$('#request').modal('show');
 			GetMap();
-			 window.WebChat.renderWebChat(
-			    {
-			       directLine: window.WebChat.createDirectLine({
-				  token: 'YOUR_DIRECT_LINE_TOKEN'
-			       }),
-			       userID: 'YOUR_USER_ID',
-			       username: 'Web Chat User',
-			       locale: 'en-US',
-			       botAvatarInitials: 'WC',
-			       userAvatarInitials: 'WW'
-			    },
-			    document.getElementById('webchat')
-			 );
 		});
 
 		$('#request').on('hide.bs.modal', function(e){
